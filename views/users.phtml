@@ -1,0 +1,36 @@
+<!doctype html>
+<html data-ng-app="usersApp">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <title>Users</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.css" />
+    <script type="text/javascript" src="/assets/javascripts/angular.min.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/users.js"></script>
+  </head>
+  <body>
+    <div data-ng-controller="UsersCtrl">
+      <div>User ID: <input type="text" ng-model="userID" /></div>
+      <button class="btn" ng-click="getUser()"><i class="icon-plus"></i>Get User</button>
+      <div>Returned User: {{returnedUser}}</div>
+      <div><button class="btn" ng-click="getUsers()">Get Users</button></div>
+      <div>{{status}}</div>
+      <div>
+        <table ng-show="users.length">
+          <thead>
+            <tr><th>ID</th><th>Name</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="user in users">
+              <td>{{user.id}}</td><td>{{user.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div>Name <input type="text" ng-model="name" /></div>
+        <div><button class="btn" ng-click="createUser()">Create User</button></div>
+      </div>
+    </div>
+  </body>
+</html>
