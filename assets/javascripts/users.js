@@ -20,6 +20,18 @@ function UsersCtrl($scope, $resource, $http) {
   $scope.createUser = function() {
     var user = new User({name:$scope.name});
     user.$save();
-    $scope.users.push(user);
+	user.$save({}, function(data){
+		$scope.users.push(data);
+	}, function(data){
+		$scope.nameError = data.data.name;
+	});
+  }
+  
+  $scope.deleteUser = function(user) {
+	if (confirm('Delete ' + user.name + "?")){
+		user.$delete();
+		$scope.users.remove(user, jQuery.inArray($scope.users));
+	} else {
+	}
   }
 }
