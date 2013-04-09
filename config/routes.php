@@ -23,7 +23,6 @@ json_resource("users");
 respond('GET', '/users', function($request, $response){
 	if (response_type($request) == 'html') {
     $response->render('views/users.phtml', array("title"=>"Users Page"));
-    break;
 	}
 });
 
@@ -43,7 +42,7 @@ respond('DELETE', '/users/[i:id]', function($request, $response){
 });
 
 function json_resource($resource) {
-  respond('GET', '/'.$resource, function($request, $response){
+  respond('GET', '/'.$resource, function($request, $response) use ($resource){
     $controller = ucfirst($resource).'Controller';
     $action = '_list';
     $controller = new $controller();
