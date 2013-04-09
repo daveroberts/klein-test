@@ -23,7 +23,7 @@ function UsersCtrl($scope, $resource, $http) {
 		if (result){
 			debugger;
 			user.$delete({}, function(data){
-				debugger;
+				debugger; // silly change
 				$scope.users = User.query();
 			}, function(data){
 				debugger;
