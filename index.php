@@ -32,7 +32,7 @@ respond('GET', '/users', function($request, $response){
   }
 });
 respond('POST', '/users', function($request, $response){
-  $vars = json_decode(file_get_contents('php://input'));
+  $vars = json_decode($request->body());
   echo '{"id":"999","name":"'.$vars->name.'"}';
 });
 respond('GET', '/users/[i:id]', function($request, $response){
