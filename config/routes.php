@@ -25,32 +25,31 @@ respond('GET', '/users', function($request, $response){
     $response->render('views/users.phtml', array("title"=>"Users Page"));
 	}
 });
-
-respond('POST', '/users', function($request, $response){
-	$request->header('HTTP/1.0 201 Created', true, 201);
-  $vars = json_decode(file_get_contents('php://input'));
-  echo '{"id":"999","name":"'.$vars->name.'"}';
-});
 respond('GET', '/users/[i:id]', function($request, $response){
   echo '{"id":"'.$request->id.'","name":"Dave"}';
 });
 respond('PUT', '/users/[i:id]', function($request, $response){
   echo "update";
 });
-respond('DELETE', '/users/[i:id]', function($request, $response){
-  echo "destroy";
-});
 
 function json_resource($resource) {
   respond('GET', '/'.$resource, function($request, $response) use ($resource){
-    $controller = ucfirst($resource).'Controller';
-    $action = '_list';
-    $controller = new $controller();
-    $data = array();
-    $controller->__init($data);
-    $controller->$action();
-    if (response_type($request) == 'json') {
-      echo json_encode($data[$resource]);
-    }
+    if (response_type($request) != 'json') { return; }
+    call_controller_action($resource, '_list', $request, $response);
   });
+  respond('DELETE', '/users/[i:id]', function($request, $response) use ($resource){
+    if (response_type($request) != 'json') { return; }
+    call_controller_action($resource, 'destroy', $request, $response);
+  });
+  respond('POST', '/users', function($request, $response) use($resource){
+    if (response_type($request) != 'json') { return; }
+    call_controller_action($resource, 'create', $request, $response);
+  });
+}
+
+function call_controller_action($resource, $action, &$request, &$response){
+  $controller = ucfirst($resource).'Controller';
+  $controller = new $controller();
+  $action = $action.'_handler';
+  return $controller->$action($request, $response);
 }
