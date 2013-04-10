@@ -15,19 +15,33 @@
       </thead>
       <tbody>
         <tr ng-repeat="user in users">
-          <td>{{user.id}}</td>
+          <td><a href="" ng-click="editUser(user)">{{user.id}}</a></td>
           <td>{{user.name}}</td>
           <td>
-          <button class="btn" ng-click="deleteUser(user)"><i class="icon-trash"></i> Delete User</button>
+          <button class="btn btn-danger btn-mini" ng-click="deleteUser(user)"><i class="icon-trash"></i> Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
-    <form ng-submit="createUser()">
-      <div>Name <input type="text" ng-model="name" /></div>
-      <div><button class="btn"><i class="icon-plus"></i> Create User</button></div>
-      <div style="color: red;">{{nameError}}</div>
-    </form>
+    <div ng-hide="userToEdit">
+      <h3>New User</h3>
+      <form ng-submit="createUser()">
+        <div>Name <input type="text" ng-model="name" /></div>
+        <div><button class="btn btn-primary"><i class="icon-plus"></i> Create User</button></div>
+        <div style="color: red;">{{nameError}}</div>
+      </form>
+    </div>
+    <div ng-show="userToEdit">
+      <h3>Edit User</h3>
+      <form ng-submit="updateUser()">
+        <div>ID: {{userToEdit.id}}</div>
+        <div>Name <input type="text" ng-model="userToEdit.name" /></div>
+        <div>
+          <button class="btn btn-primary">Edit User</button>
+          <button class="btn" ng-click="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 </div>

@@ -6,6 +6,7 @@ function UsersCtrl($scope, $resource, $http) {
   $scope.users = User.query();
   $scope.name = '';
   $scope.nameError = '';
+  $scope.userToEdit = null;
   $scope.createUser = function() {
     $scope.nameError = '';
     if ($scope.name == ''){
@@ -22,17 +23,20 @@ function UsersCtrl($scope, $resource, $http) {
   }
   
   $scope.deleteUser = function(user) {
-	bootbox.confirm('Delete ' + user.name + '?', function(result) {
-		if (result){
-			user.$delete(function(data){
-        console.log("Delete success");
-				$scope.users = User.query();
-			}, function(data){
-        console.log("Delete had an error");
-			});
-		} else {
-		}
-	});
+    bootbox.confirm('Delete ' + user.name + '?', function(result) {
+      if (result){
+        user.$delete(function(data){
+          $scope.users = User.query();
+        }, function(data){
+        });
+      }
+    });
+  }
+  $scope.editUser = function(user) {
+    $scope.userToEdit = user;
+  }
+  $scope.cancelEdit = function(user) {
+    $scope.userToEdit = null;
   }
 }
 
