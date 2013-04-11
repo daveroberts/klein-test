@@ -11,12 +11,11 @@
   <div data-ng-controller="UsersCtrl">
     <table ng-show="users.length">
       <thead>
-        <tr><th>ID</th><th>Name</th></tr>
+        <tr><th>Name</th></tr>
       </thead>
       <tbody>
         <tr ng-repeat="user in users">
-          <td><a href="" ng-click="editUser(user)">{{user.id}}</a></td>
-          <td>{{user.name}}</td>
+          <td><a href="" ng-click="editUser(user)">{{user.name}}</a></td>
           <td>
           <button class="btn btn-danger btn-mini" ng-click="deleteUser(user)"><i class="icon-trash"></i> Delete</button>
           </td>
@@ -37,7 +36,7 @@
         <div>ID: {{userToEdit.id}}</div>
         <div>Name <input type="text" ng-model="userToEdit.name" /></div>
         <div>
-          <button class="btn btn-primary">Edit User</button>
+          <button class="btn btn-primary">Save</button>
           <button class="btn" ng-click="cancelEdit()">Cancel</button>
         </div>
       </form>

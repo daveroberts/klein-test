@@ -1,35 +1,34 @@
 <?php
 
-class UsersController extends JSONController{
-	function _list(){
-    return User::All();
-  }
+class UsersController{
   function create($params){
     $user = User::Create($params);
-    $result = $user->save();
-    if ($result){
+    if (true){
       return array(true, $user);
     } else {
-      return array(false, $user->errors());
+      return array(false, null);
     }
   }
-  function show($id){
-    return User::Get($id);
+  function _list($params){
+    return array(true, User::All());
   }
-  function update($params){
-    $user = User::Get($params->id);
+  function show($id, $params){
+    return array(true, User::Get($id));
+  }
+  function update($id, $params){
+    $user = User::Get($id);
     $user->set_attributes($params);
-    $result = $user->save();
-    $errors = array();
+    $result = $user->update();
+    $errors = null;
     if (!$result){
       $errors = $user->errors();
     }
     return array($result, $errors);
   }
-  function destroy($id){
+  function destroy($id, $params){
     $user = User::Get($id);
     $result = $user->destroy();
-    $errors = array();
+    $errors = null;
     if (!$result){
       $errors = $user->errors();
     }

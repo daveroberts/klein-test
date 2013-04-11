@@ -25,14 +25,12 @@ respond('GET', '/users', function($request, $response){
     $response->render('views/users.phtml', array("title"=>"Users Page"));
 	}
 });
-respond('GET', '/users/[i:id]', function($request, $response){
-  echo '{"id":"'.$request->id.'","name":"Dave"}';
-});
-respond('PUT', '/users/[i:id]', function($request, $response){
-  echo "update";
-});
 
 function json_resource($resource) {
+  respond('POST', '/users', function($request, $response) use($resource){
+    if (response_type($request) != 'json') { return; }
+    call_controller_action($resource, 'create', $request, $response);
+  });
   respond('GET', '/'.$resource, function($request, $response) use ($resource){
     if (response_type($request) != 'json') { return; }
     call_controller_action($resource, '_list', $request, $response);
@@ -41,15 +39,36 @@ function json_resource($resource) {
     if (response_type($request) != 'json') { return; }
     call_controller_action($resource, 'destroy', $request, $response);
   });
-  respond('POST', '/users', function($request, $response) use($resource){
+  respond('PUT', '/users/[i:id]', function($request, $response) use($resource){
+	  if (response_type($request) != 'json') { return; }
+    call_controller_action($resource, 'update', $request, $response);
+	});
+  respond('GET', '/users/[i:id]', function($request, $response){
     if (response_type($request) != 'json') { return; }
-    call_controller_action($resource, 'create', $request, $response);
+    call_controller_action($resource, 'show', $request, $response);
   });
 }
 
 function call_controller_action($resource, $action, &$request, &$response){
   $controller = ucfirst($resource).'Controller';
   $controller = new $controller();
-  $action = $action.'_handler';
-  return $controller->$action($request, $response);
+  $params = json_decode($request->body());
+  $bunch = null;
+  if ($action == 'show' || $action == 'destroy' || $action == 'update'){
+    $bunch = $controller->$action($request->id, $params);
+  } else {
+    $bunch = $controller->$action($params);
+  }
+  $result = $bunch[0];
+  $body = $bunch[1];
+  if ($result){
+    $code = 200;
+    if ($action == 'destroy'){ $code = 204; }
+    if ($action == 'create'){ $code = 201; }
+    if ($action == 'update'){ $code = 204; }
+    $response->code($code);
+  } else {
+    $response->code(400);
+  }
+  if ($body){ $response->json($body); }
 }

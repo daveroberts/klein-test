@@ -1,7 +1,7 @@
 angular.module('usersApp', ['ngResource']);
 
 function UsersCtrl($scope, $resource, $http) {
-  var User = $resource('/users/:id', {id:'@id'});
+  var User = $resource('/users/:id', {id:'@id'}, { update: {method:'PUT'} });
   $scope.returnedUser = "";
   $scope.users = User.query();
   $scope.name = '';
@@ -26,6 +26,11 @@ function UsersCtrl($scope, $resource, $http) {
     bootbox.confirm('Delete ' + user.name + '?', function(result) {
       if (result){
         user.$delete(function(data){
+        $.each($scope.users, function(index, u){
+          if (u.id != user.id){ return true; }
+          $scope.users.splice(index, 1);
+          return false;
+        });
           $scope.users = User.query();
         }, function(data){
         });
@@ -33,7 +38,18 @@ function UsersCtrl($scope, $resource, $http) {
     });
   }
   $scope.editUser = function(user) {
-    $scope.userToEdit = user;
+    $scope.userToEdit = new User({id:user.id,name:user.name});
+  }
+  $scope.updateUser = function(){
+	$scope.userToEdit.$update({id:$scope.userToEdit.id},function(data){
+    $.each($scope.users, function(index, user){
+      if (user.id != $scope.userToEdit.id){ return true; }
+      $scope.users[index] = $scope.userToEdit;
+      return false;
+    });
+    $scope.userToEdit = null;
+  }, function(data){
+  });
   }
   $scope.cancelEdit = function(user) {
     $scope.userToEdit = null;

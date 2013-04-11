@@ -1,6 +1,6 @@
 <?php
 
-class User extends ActiveRecord {
+class User {
 	public $id;
 	public $name;
   static function All(){
@@ -24,23 +24,26 @@ class User extends ActiveRecord {
     $user->name = $row['name'];
     return $user;
   }
-  static function Create($params){
+  static function Create($params) {
     $sql = "INSERT INTO `users` (name) VALUES('".$params->name."')";
     global $db;
     $db->exec($sql);
     $id = $db->lastInsertId();
     return User::Get($id);
   }
-  function save(){
+  function update(){
+    $sql = "UPDATE `users` SET `name`='".$this->name."' WHERE `id`=".$this->id;
+    global $db;
+    $db->exec($sql);
     return true;
+  }
+  function set_attributes($params){
+    $this->name = $params->name;
   }
   function destroy(){
     $sql = "DELETE FROM `users` WHERE ID='".$this->id."'";
     global $db;
     $db->exec($sql);
     return true;
-  }
-  function errors(){
-    return array("error1"=>"This is error 1");
   }
 }
