@@ -20,6 +20,28 @@ respond(function ($request, $response) {
 
 json_resource("users");
 
+respond('POST', '/login', function($request, $response){
+	if (response_type($request) != 'json') { return; }
+  $params = json_decode($request->body());
+  if ($params['username'] == 'admin' && $params['password'] == 'password'){
+    $_SESSION['current_user_id'] = 1;
+    $response->code(204);
+	} else {
+    $response->code(204);
+  }
+});
+
+respond('GET', '/secure', function($request, $response){
+	if (response_type($request) != 'html') { return; }
+  $response->body("SESSION VALUE: ".$_SESSION['current_user_id']);
+});
+
+respond('GET', '/users', function($request, $response){
+	if (response_type($request) == 'html') {
+    $response->render('views/users.phtml', array("title"=>"Users Page"));
+	}
+});
+
 respond('GET', '/users', function($request, $response){
 	if (response_type($request) == 'html') {
     $response->render('views/users.phtml', array("title"=>"Users Page"));
