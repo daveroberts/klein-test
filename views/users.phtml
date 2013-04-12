@@ -41,6 +41,27 @@
         </div>
       </form>
     </div>
+    <div>
+      <a href="/secure">Secure Area</a>
+      <form>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><label for='username'>Username</label></td>
+              <td><input id='username' type='text' ng-model='username' /></td>
+            </tr>
+            <tr>
+              <td><label for='password'>Password</label></td>
+              <td><input id='password' type='password' ng-model='password' /></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button class="btn btn-primary btn-mini" ng-click='login()'>Login</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
   </div>
 </div>
 </div>

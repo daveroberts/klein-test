@@ -41,18 +41,37 @@ function UsersCtrl($scope, $resource, $http) {
     $scope.userToEdit = new User({id:user.id,name:user.name});
   }
   $scope.updateUser = function(){
-	$scope.userToEdit.$update({id:$scope.userToEdit.id},function(data){
-    $.each($scope.users, function(index, user){
-      if (user.id != $scope.userToEdit.id){ return true; }
-      $scope.users[index] = $scope.userToEdit;
-      return false;
+    $scope.userToEdit.$update({id:$scope.userToEdit.id},function(data){
+      $.each($scope.users, function(index, user){
+        if (user.id != $scope.userToEdit.id){ return true; }
+        $scope.users[index] = $scope.userToEdit;
+        return false;
+      });
+      $scope.userToEdit = null;
+    }, function(data){
     });
-    $scope.userToEdit = null;
-  }, function(data){
-  });
   }
   $scope.cancelEdit = function(user) {
     $scope.userToEdit = null;
+  }
+  $scope.login = function(){
+    data = {username:$scope.username,password:$scope.password};
+    $http({method: 'POST', url: '/login', data: data}).
+      success(function(data, status, headers, config) {
+        bootbox.alert("Login Successful");
+        // this callback will be called asynchronously
+        // when the response is available
+      }).
+      error(function(data, status, headers, config) {
+        bootbox.alert("Login Error");
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+    });
+    /*$http.post('/login', data).success(function(data, status, headers, config){
+      debugger;
+    }).error(function(data, status, headers, config){
+      debugger;
+    });*/
   }
 }
 

@@ -1,6 +1,7 @@
 <?php
 require 'klein.php';
 $application_salt = 'mysalt-8fhgns9984sndsg984jdsg848jsdg';
+session_start();
 require("config/database.php");
 
 require_once("config/routes.php");
