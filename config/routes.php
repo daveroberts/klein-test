@@ -18,6 +18,25 @@ respond(function ($request, $response) {
   }
 });
 
+respond('POST', '/login', function($request, $response){
+	if (response_type($request) != 'json') { $response->code(444); }
+  $params = json_decode($request->body());
+  /*if ($params['username'] == 'admin' && $params['password'] == 'password'){
+    $_SESSION['current_user_id'] = 1;
+  } else {*/
+    $response->code(401);
+    print("request body:");
+    print_r($request->body());
+  //}
+});
+
+respond('GET', '/secure', function($request, $response){
+	if (response_type($request) != 'html') { return; }
+  $current_user_id = 'None';
+  if (isset($_SESSION['current_user_id'])){ $current_user_id = $_SESSION['current_user_id']; }
+  echo 'Current User ID: '.$current_user_id;
+});
+
 json_resource("users");
 
 respond('POST', '/login', function($request, $response){
