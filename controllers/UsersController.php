@@ -4,34 +4,35 @@ class UsersController{
   function create($params){
     $user = User::Create($params);
     if (true){
-      return array(true, $user);
+      return array(201, $user);
     } else {
-      return array(false, null);
+      return array(400, null);
     }
   }
   function _list($params){
-    return array(true, User::All());
+    return array(200, User::All());
   }
   function show($id, $params){
-    return array(true, User::Get($id));
+    return array(200, User::Get($id));
   }
-  function update($id, $params){
-    $user = User::Get($id);
+  function update($params){
+    $user = User::Get($params->id);
     $user->set_attributes($params);
     $result = $user->update();
-    $errors = null;
-    if (!$result){
-      $errors = $user->errors();
+    if ($result) {
+      return array(204, null);
+    } else {
+      return array(400, $user->errors());
     }
-    return array($result, $errors);
   }
-  function destroy($id, $params){
-    $user = User::Get($id);
+  function destroy($params){
+    $user = User::Get($params->id);
     $result = $user->destroy();
-    $errors = null;
-    if (!$result){
-      $errors = $user->errors();
+    $result = $user->update();
+    if ($result) {
+      return array(204, null);
+    } else {
+      return array(400, $user->errors());
     }
-    return array($result, $errors);
   }
 }

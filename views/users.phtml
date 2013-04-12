@@ -43,7 +43,8 @@
     </div>
     <div>
       <a href="/secure">Secure Area</a>
-      <form>
+      <div ng-show="current_user">Logged in as {{current_user}} <button class="btn btn-mini" ng-click="logout()">Logout</button></div>
+      <form ng-hide="current_user">
         <table class="table">
           <tbody>
             <tr>

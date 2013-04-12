@@ -3,7 +3,10 @@
 respond(function ($request, $response) {
   switch (response_type($request)) {
     case 'json':
-      if (getallheaders()['X-XSRF-TOKEN'] != generateSecureCookie()){
+      $headers = getallheaders();
+      $xsrf_token = null;
+      if (isset($headers['X-XSRF-TOKEN'])){ $xsrf_token = $headers['X-XSRF-TOKEN']; }
+      if ($xsrf_token != generateSecureCookie()){
         // 401 unauthorized
       }
       $response->header('Content-type: application/json');
@@ -18,16 +21,23 @@ respond(function ($request, $response) {
   }
 });
 
+respond('GET', '/current_user', function($request, $response){
+  if (isset($_SESSION['current_user_id'])) { echo $_SESSION['current_user_id']; }
+});
+
 respond('POST', '/login', function($request, $response){
-	if (response_type($request) != 'json') { $response->code(444); }
   $params = json_decode($request->body());
-  /*if ($params['username'] == 'admin' && $params['password'] == 'password'){
-    $_SESSION['current_user_id'] = 1;
-  } else {*/
+  if ($params->username == 'admin' && $params->password == 'password'){
+    $_SESSION['current_user_id'] = 'admin';
+    $response->code(204);
+  } else {
     $response->code(401);
-    print("request body:");
-    print_r($request->body());
-  //}
+  }
+});
+
+respond('POST', '/logout', function($request, $response){
+  unset($_SESSION['current_user_id']);
+  $response->code(204);
 });
 
 respond('GET', '/secure', function($request, $response){
@@ -35,31 +45,10 @@ respond('GET', '/secure', function($request, $response){
   $current_user_id = 'None';
   if (isset($_SESSION['current_user_id'])){ $current_user_id = $_SESSION['current_user_id']; }
   echo 'Current User ID: '.$current_user_id;
+  print_r($_SESSION);
 });
 
 json_resource("users");
-
-respond('POST', '/login', function($request, $response){
-	if (response_type($request) != 'json') { return; }
-  $params = json_decode($request->body());
-  if ($params['username'] == 'admin' && $params['password'] == 'password'){
-    $_SESSION['current_user_id'] = 1;
-    $response->code(204);
-	} else {
-    $response->code(204);
-  }
-});
-
-respond('GET', '/secure', function($request, $response){
-	if (response_type($request) != 'html') { return; }
-  $response->body("SESSION VALUE: ".$_SESSION['current_user_id']);
-});
-
-respond('GET', '/users', function($request, $response){
-	if (response_type($request) == 'html') {
-    $response->render('views/users.phtml', array("title"=>"Users Page"));
-	}
-});
 
 respond('GET', '/users', function($request, $response){
 	if (response_type($request) == 'html') {
@@ -69,23 +58,18 @@ respond('GET', '/users', function($request, $response){
 
 function json_resource($resource) {
   respond('POST', '/users', function($request, $response) use($resource){
-    if (response_type($request) != 'json') { return; }
     call_controller_action($resource, 'create', $request, $response);
   });
   respond('GET', '/'.$resource, function($request, $response) use ($resource){
-    if (response_type($request) != 'json') { return; }
     call_controller_action($resource, '_list', $request, $response);
   });
   respond('DELETE', '/users/[i:id]', function($request, $response) use ($resource){
-    if (response_type($request) != 'json') { return; }
     call_controller_action($resource, 'destroy', $request, $response);
   });
   respond('PUT', '/users/[i:id]', function($request, $response) use($resource){
-	  if (response_type($request) != 'json') { return; }
     call_controller_action($resource, 'update', $request, $response);
 	});
   respond('GET', '/users/[i:id]', function($request, $response){
-    if (response_type($request) != 'json') { return; }
     call_controller_action($resource, 'show', $request, $response);
   });
 }
@@ -94,22 +78,12 @@ function call_controller_action($resource, $action, &$request, &$response){
   $controller = ucfirst($resource).'Controller';
   $controller = new $controller();
   $params = json_decode($request->body());
-  $bunch = null;
-  if ($action == 'show' || $action == 'destroy' || $action == 'update'){
-    $bunch = $controller->$action($request->id, $params);
-  } else {
-    $bunch = $controller->$action($params);
-  }
-  $result = $bunch[0];
+  $bunch = $controller->$action($params);
+  $code = $bunch[0];
   $body = $bunch[1];
-  if ($result){
-    $code = 200;
-    if ($action == 'destroy'){ $code = 204; }
-    if ($action == 'create'){ $code = 201; }
-    if ($action == 'update'){ $code = 204; }
-    $response->code($code);
-  } else {
-    $response->code(400);
+  $response->code($code);
+  if ($body){
+    if (response_type($request) == 'json') { $response->json($body); }
+    if (response_type($request) == 'xml') { /*$response->xml($body);*/ }
   }
-  if ($body){ $response->json($body); }
 }

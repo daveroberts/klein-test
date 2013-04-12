@@ -7,6 +7,7 @@ function UsersCtrl($scope, $resource, $http) {
   $scope.name = '';
   $scope.nameError = '';
   $scope.userToEdit = null;
+  $http.get('/current_user').success(function(data){ $scope.current_user = data; });
   $scope.createUser = function() {
     $scope.nameError = '';
     if ($scope.name == ''){
@@ -58,20 +59,17 @@ function UsersCtrl($scope, $resource, $http) {
     data = {username:$scope.username,password:$scope.password};
     $http({method: 'POST', url: '/login', data: data}).
       success(function(data, status, headers, config) {
-        bootbox.alert("Login Successful");
-        // this callback will be called asynchronously
-        // when the response is available
+        $scope.current_user = $scope.username;
       }).
       error(function(data, status, headers, config) {
         bootbox.alert("Login Error");
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
     });
-    /*$http.post('/login', data).success(function(data, status, headers, config){
-      debugger;
-    }).error(function(data, status, headers, config){
-      debugger;
-    });*/
+  }
+  $scope.logout = function(){
+    $http({method: 'POST', url: '/logout'}).
+      success(function(data, status, headers, config) {
+        $scope.current_user = null;
+      });
   }
 }
 
