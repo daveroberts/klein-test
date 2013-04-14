@@ -1,5 +1,7 @@
 <?php
 
+json_resource("users");
+
 respond(function ($request, $response) {
   switch (response_type($request)) {
     case 'json':
@@ -48,42 +50,8 @@ respond('GET', '/secure', function($request, $response){
   print_r($_SESSION);
 });
 
-json_resource("users");
-
 respond('GET', '/users', function($request, $response){
 	if (response_type($request) == 'html') {
-    $response->render('views/users.phtml', array("title"=>"Users Page"));
+    $response->render('views/users/users.phtml', array("title"=>"Users Page"));
 	}
 });
-
-function json_resource($resource) {
-  respond('POST', '/users', function($request, $response) use($resource){
-    call_controller_action($resource, 'create', $request, $response);
-  });
-  respond('GET', '/'.$resource, function($request, $response) use ($resource){
-    call_controller_action($resource, '_list', $request, $response);
-  });
-  respond('DELETE', '/users/[i:id]', function($request, $response) use ($resource){
-    call_controller_action($resource, 'destroy', $request, $response);
-  });
-  respond('PUT', '/users/[i:id]', function($request, $response) use($resource){
-    call_controller_action($resource, 'update', $request, $response);
-	});
-  respond('GET', '/users/[i:id]', function($request, $response){
-    call_controller_action($resource, 'show', $request, $response);
-  });
-}
-
-function call_controller_action($resource, $action, &$request, &$response){
-  $controller = ucfirst($resource).'Controller';
-  $controller = new $controller();
-  $params = json_decode($request->body());
-  $bunch = $controller->$action($params);
-  $code = $bunch[0];
-  $body = $bunch[1];
-  $response->code($code);
-  if ($body){
-    if (response_type($request) == 'json') { $response->json($body); }
-    if (response_type($request) == 'xml') { /*$response->xml($body);*/ }
-  }
-}

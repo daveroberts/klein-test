@@ -15,8 +15,8 @@ class UsersController{
   function show($id, $params){
     return array(200, User::Get($id));
   }
-  function update($params){
-    $user = User::Get($params->id);
+  function update($id, $params){
+    $user = User::Get($id);
     $user->set_attributes($params);
     $result = $user->update();
     if ($result) {
@@ -25,10 +25,9 @@ class UsersController{
       return array(400, $user->errors());
     }
   }
-  function destroy($params){
-    $user = User::Get($params->id);
+  function destroy($id, $params){
+    $user = User::Get($id);
     $result = $user->destroy();
-    $result = $user->update();
     if ($result) {
       return array(204, null);
     } else {

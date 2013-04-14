@@ -17,6 +17,7 @@ function UsersCtrl($scope, $resource, $http) {
     var user = new User({name:$scope.name});
     user.$save({}, function(data){
       $scope.users.push(data);
+      $().toastmessage('showSuccessToast', 'Added '+data.name);
       $scope.name = '';
     }, function(data){
       $scope.nameError = data.data.name;
@@ -27,13 +28,14 @@ function UsersCtrl($scope, $resource, $http) {
     bootbox.confirm('Delete ' + user.name + '?', function(result) {
       if (result){
         user.$delete(function(data){
-        $.each($scope.users, function(index, u){
-          if (u.id != user.id){ return true; }
-          $scope.users.splice(index, 1);
-          return false;
-        });
-          $scope.users = User.query();
+          $.each($scope.users, function(index, u){
+            if (u.id != user.id){ return true; }
+            $scope.users.splice(index, 1);
+            return false;
+          });
+          $().toastmessage('showSuccessToast', 'Removed '+user.name);
         }, function(data){
+          $scope.users = User.query();
         });
       }
     });
@@ -60,6 +62,7 @@ function UsersCtrl($scope, $resource, $http) {
     $http({method: 'POST', url: '/login', data: data}).
       success(function(data, status, headers, config) {
         $scope.current_user = $scope.username;
+        $().toastmessage('showSuccessToast', 'Logged in as '+$scope.username);
       }).
       error(function(data, status, headers, config) {
         bootbox.alert("Login Error");
