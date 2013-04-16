@@ -20,6 +20,8 @@ respond(function ($request, $response) {
       setcookie('XSRF-TOKEN', generateSecureCookie());
       $response->layout('views/layout.phtml');
       break;
+    default:
+      $response->code(406);
   }
 });
 
@@ -50,8 +52,8 @@ respond('GET', '/secure', function($request, $response){
   print_r($_SESSION);
 });
 
-respond('GET', '/users', function($request, $response){
+respond('GET', '/', function($request, $response){
 	if (response_type($request) == 'html') {
-    $response->render('views/users/users.phtml', array("title"=>"Users Page"));
+    $response->render('views/index.html', array("title"=>"Users Page"));
 	}
 });

@@ -13,7 +13,9 @@ class UsersController{
     return array(200, User::All());
   }
   function show($id, $params){
-    return array(200, User::Get($id));
+    $user = User::Get($id);
+    if (!$user) { return array(404, null); }
+    return array(200, $user);
   }
   function update($id, $params){
     $user = User::Get($id);
@@ -27,6 +29,7 @@ class UsersController{
   }
   function destroy($id, $params){
     $user = User::Get($id);
+    if (!$user) { return array(404, null); }
     $result = $user->destroy();
     if ($result) {
       return array(204, null);

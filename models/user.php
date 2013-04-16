@@ -19,6 +19,7 @@ class User {
     $sql = "SELECT * FROM `users` WHERE `id`=".$id;
     global $db;
     $row = $db->query($sql)->fetch();
+    if (!$row) { return false; }
     $user = new User();
     $user->id = $row['id'];
     $user->name = $row['name'];

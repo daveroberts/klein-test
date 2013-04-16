@@ -13,7 +13,7 @@ function json_resource($resource) {
   respond('PUT', '/users/[:id]', function($request, $response) use($resource){
     call_controller_action($resource, 'update', $request, $response);
 	});
-  respond('GET', '/users/[:id]', function($request, $response){
+  respond('GET', '/users/[:id]', function($request, $response) use($resource){
     call_controller_action($resource, 'show', $request, $response);
   });
 }

@@ -1,5 +1,3 @@
-angular.module('usersApp', ['ngResource']);
-
 function UsersCtrl($scope, $resource, $http) {
   var User = $resource('/users/:id', {id:'@id'}, { update: {method:'PUT'} });
   $scope.returnedUser = "";
@@ -17,13 +15,12 @@ function UsersCtrl($scope, $resource, $http) {
     var user = new User({name:$scope.name});
     user.$save({}, function(data){
       $scope.users.push(data);
-      //$().toastmessage('showSuccessToast', 'Added '+data.name);
       $.gritter.add({
         // (string | mandatory) the heading of the notification
         title: 'Success',
         // (string | mandatory) the text inside the notification
         text: 'User added successfully',
-        image: '/assets/toastmessage/images/success.png',
+        image: '/assets/gritter/images/success.png',
         time: 3000,
         class_name: 'push_below_top_bar',
       });
@@ -32,7 +29,6 @@ function UsersCtrl($scope, $resource, $http) {
       $scope.nameError = data.data.name;
     });
   }
-  
   $scope.deleteUser = function(user) {
     bootbox.confirm('Delete ' + user.name + '?', function(result) {
       if (result){
@@ -42,18 +38,21 @@ function UsersCtrl($scope, $resource, $http) {
             $scope.users.splice(index, 1);
             return false;
           });
+          $scope.userToEdit = null;
           $.gritter.add({
             title: 'Success',
             text: 'User removed successfully',
-            image: '/assets/toastmessage/images/success.png',
+            image: '/assets/gritter/images/success.png',
             time: 3000,
             class_name: 'push_below_top_bar',
           });
         }, function(data){
-          $scope.users = User.query();
+          //$scope.users = User.query();
+          $scope.userToEdit = null;
         });
       }
     });
+    return false;
   }
   $scope.editUser = function(user) {
     $scope.userToEdit = new User({id:user.id,name:user.name});
@@ -70,6 +69,7 @@ function UsersCtrl($scope, $resource, $http) {
     });
   }
   $scope.cancelEdit = function(user) {
+    //if ($scope.editUserForm.$dirty) {
     $scope.userToEdit = null;
   }
   $scope.login = function(){
