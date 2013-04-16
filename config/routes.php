@@ -1,7 +1,5 @@
 <?php
 
-json_resource("users");
-
 respond(function ($request, $response) {
   switch (response_type($request)) {
     case 'json':
@@ -9,7 +7,9 @@ respond(function ($request, $response) {
       $xsrf_token = null;
       if (isset($headers['X-XSRF-TOKEN'])){ $xsrf_token = $headers['X-XSRF-TOKEN']; }
       if ($xsrf_token != generateSecureCookie()){
-        // 401 unauthorized
+        $response->code(401);
+        dispatch();
+        return;
       }
       $response->header('Content-type: application/json');
       break;
@@ -18,12 +18,13 @@ respond(function ($request, $response) {
       break;
     case 'html':
       setcookie('XSRF-TOKEN', generateSecureCookie());
-      $response->layout('views/layout.phtml');
       break;
     default:
       $response->code(406);
   }
 });
+
+json_resource("users");
 
 respond('GET', '/current_user', function($request, $response){
   if (isset($_SESSION['current_user_id'])) { echo $_SESSION['current_user_id']; }
@@ -54,6 +55,6 @@ respond('GET', '/secure', function($request, $response){
 
 respond('GET', '/', function($request, $response){
 	if (response_type($request) == 'html') {
-    $response->render('views/index.html', array("title"=>"Users Page"));
+    $response->render('views/index.html');
 	}
 });

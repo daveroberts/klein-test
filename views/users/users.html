@@ -23,31 +23,9 @@
     <div>ID: {{userToEdit.id}}</div>
     <div>Name <input type="text" ng-model="userToEdit.name" /></div>
     <div>
-      <button type="submit" class="btn btn-primary" ngc="updateUser(userToEdit)">Save</button>
+      <button type="submit" class="btn btn-primary btn-custom" ngc="updateUser(userToEdit)">Save</button>
       <a class="btn" ng-click="cancelEdit(userToEdit)">Cancel</a>
       <a class="btn btn-danger" ng-click="deleteUser(userToEdit)"><i class="icon-trash"></i> Delete</a>
     </div>
-  </form>
-</div>
-<div>
-  <a href="/secure">Secure Area</a>
-  <div ng-show="current_user">Logged in as {{current_user}} <button class="btn btn-mini" ng-click="logout()">Logout</button></div>
-  <form ng-hide="current_user">
-    <table class="table">
-      <tbody>
-        <tr>
-          <td><label for='username'>Username</label></td>
-          <td><input id='username' type='text' ng-model='username' /></td>
-        </tr>
-        <tr>
-          <td><label for='password'>Password</label></td>
-          <td><input id='password' type='password' ng-model='password' /></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td><button class="btn btn-primary btn-mini" ng-click='login()'>Login</button></td>
-        </tr>
-      </tbody>
-    </table>
   </form>
 </div>
