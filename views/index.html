@@ -6,6 +6,9 @@
     <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="/assets/gritter/css/jquery.gritter.css" rel="stylesheet" media="screen">
+    <!--[if lte IE 8]>
+      <script src="/assets/angular/json3.min.js"></script>
+    <![endif]-->
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -27,7 +30,7 @@
     </style>
     <link href="/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
   </head>
-  <body ng-app="usersApp">
+  <body ng-app="usersApp" id="ng-app">
     <script src="/assets/jquery-1.9.1.min.js"></script>
     <script src="/assets/angular/angular.min.js"></script>
     <script src="/assets/angular/angular-resource.min.js"></script>
