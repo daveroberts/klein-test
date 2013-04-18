@@ -5,7 +5,6 @@ function UsersCtrl($scope, $resource, $http) {
   $scope.name = '';
   $scope.nameError = '';
   $scope.userToEdit = null;
-  $http.get('/current_user').success(function(data){ $scope.current_user = data; });
   $scope.createUser = function() {
     $scope.nameError = '';
     if ($scope.name == ''){

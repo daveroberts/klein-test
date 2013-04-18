@@ -7,10 +7,6 @@
     <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="/assets/gritter/css/jquery.gritter.css" rel="stylesheet" media="screen">
     <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
       .sidebar-nav {
         padding: 9px 0;
       }
@@ -35,35 +31,36 @@
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/gritter/js/jquery.gritter.min.js"></script>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Project name</a>
-          <div class="navbar">
-            <div class="navbar-inner">
-              <div class="container-fluid">
-                <a class="brand">Test</a>
-                <ul class="nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#about">About</a></li>
-                  <li><a href="#contact">Contact</a></li>
-                </ul>
-                <form class="navbar-search pull-right">
-                  <input type="text" class="span2" placeholder="Login">
-                  <input type="text" class="span2" placeholder="Password">
-                  <input type="submit" value="Login" class="btn"/>
-                </form>
+    <div class="container-fluid">
+      <div class='navbar'>
+          <div class='navbar-inner'>
+              <div class='container-fluid'>
+                  <a class='brand'>Test</a>
+                  <ul class='nav'>
+                      <li><a>Item 1</a></li>
+                      <li><a>Item 2</a></li>
+                  </ul>
+                    <div ng-controller="LoginCtrl">
+                      <ul class="nav pull-right" ng-show="current_user">
+                        <li class="dropdown">
+                          <a data-toggle="dropdown" class="dropdown-toggle" href="#">Logged in as {{current_user}} <b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="javascript:;" ng-click="logout()">Logout</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                      <form ng-hide="current_user" class="navbar-form pull-right" ng-submit="login()">
+                        <input type="text" class="input-small" ng-model="username" id="username" placeholder="Login" autofocus>
+                        <input type="password" class="input-small" ng-model="password" placeholder="Password">
+                        <input type="submit" value="Login" class="btn"/>
+                      </form>
+                    </div>
+                  </div>
               </div>
-            </div>
-          </div><!--/.navbar-inner -->
-        </div>
+          </div>
       </div>
     </div>
+    
 
     <div class="container-fluid">
       <div class="row-fluid">

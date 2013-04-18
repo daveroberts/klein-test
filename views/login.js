@@ -1,4 +1,5 @@
 function LoginCtrl($scope, $resource, $http) {
+  $http.get('/current_user').success(function(data){ $scope.current_user = data; });
   $scope.login = function(){
     data = {username:$scope.username,password:$scope.password};
     $http({method: 'POST', url: '/login', data: data}).
@@ -16,6 +17,7 @@ function LoginCtrl($scope, $resource, $http) {
           image: '/assets/gritter/images/error.png',
           time: 3000, class_name: 'push_below_top_bar',
         });
+        $element.find('#username').focus();
     });
   }
   $scope.logout = function(){
