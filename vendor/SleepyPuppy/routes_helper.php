@@ -1,19 +1,19 @@
 <?php
 
 function json_resource($resource) {
-  respond('POST', '/users', function($request, $response) use($resource){
+  respond('POST', '/'.$resource, function($request, $response) use($resource){
     call_controller_action($resource, 'create', $request, $response);
   });
   respond('GET', '/'.$resource, function($request, $response) use ($resource){
     call_controller_action($resource, '_list', $request, $response);
   });
-  respond('DELETE', '/users/[:id]', function($request, $response) use ($resource){
+  respond('DELETE', '/'.$resource.'/[:id]', function($request, $response) use ($resource){
     call_controller_action($resource, 'destroy', $request, $response);
   });
-  respond('PUT', '/users/[:id]', function($request, $response) use($resource){
+  respond('PUT', '/'.$resource.'/[:id]', function($request, $response) use($resource){
     call_controller_action($resource, 'update', $request, $response);
 	});
-  respond('GET', '/users/[:id]', function($request, $response) use($resource){
+  respond('GET', '/'.$resource.'/[:id]', function($request, $response) use($resource){
     call_controller_action($resource, 'show', $request, $response);
   });
 }
