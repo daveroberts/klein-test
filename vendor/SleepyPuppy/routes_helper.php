@@ -22,17 +22,25 @@ function call_controller_action($resource, $action, &$request, &$response){
   $controller = ucfirst($resource).'Controller';
   $controller = new $controller();
   $params = json_decode($request->body());
-  $bunch = null;
-  if ($action == 'show' || $action == 'update' || $action == 'destroy') {
-    $bunch = $controller->$action($request->id, $params);
-  } else {
-    $bunch = $controller->$action($params);
+  if (method_exists($controller, 'before')){
+    $result = true;
+    $result = $controller->before($params, $request, $response);
+    if (!$result){ return; }
   }
-  $code = $bunch[0];
-  $body = $bunch[1];
-  $response->code($code);
-  if ($body){
-    if (response_type($request) == 'json') { $response->json($body); }
-    if (response_type($request) == 'xml') { /*$response->xml($body);*/ }
+  $before_action = 'before_'.$action;
+  if ($before_action == 'before__list'){ $before_action = 'before_list'; }
+  if (method_exists($controller, $before_action)){
+    $result = true;
+    if ($action == 'show' || $action == 'update' || $action == 'destroy') {
+      $result = $controller->$before_action($request->id, $params, $request, $response);
+    } else {
+      $result = $controller->$before_action($params, $request, $response);
+    }
+    if (!$result){ return; }
+  }
+  if ($action == 'show' || $action == 'update' || $action == 'destroy') {
+    $result = $controller->$action($request->id, $params, $request, $response);
+  } else {
+    $result = $controller->$action($params, $request, $response);
   }
 }
