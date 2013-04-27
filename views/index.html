@@ -67,7 +67,7 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list" data-ng-controller="NavCtrl">
               <li class="nav-header">Sidebar</li>
@@ -88,9 +88,9 @@
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
-        <div class="span9">
+        <div class="span10">
           <div data-ng-controller="RandomCtrl">
-            <div>Seconds you've been on this page: {{counter}}</div>
+            <div>Seconds you've been on this page: <span>{{counter}}</span></div>
           </div>
           <div ng-view></div>
           <?php //$this->yield($data) ?>

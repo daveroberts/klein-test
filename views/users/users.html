@@ -13,6 +13,7 @@
   <h3>New User</h3>
   <form ng-submit="createUser()">
     <div>Name <input type="text" ng-model="name" /></div>
+    <div>{{name}}</div>
     <div><button class="btn btn-primary"><i class="icon-plus"></i> Create User</button></div>
     <div style="color: red;">{{nameError}}</div>
   </form>
