@@ -17,7 +17,8 @@ function LoginCtrl($scope, $resource, $http) {
           image: '/assets/gritter/images/error.png',
           time: 3000, class_name: 'push_below_top_bar',
         });
-        $element.find('#username').focus();
+        $('#password').val("");
+        $('#username').select();
     });
   }
   $scope.logout = function(){
