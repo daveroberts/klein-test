@@ -1,5 +1,8 @@
-function UsersCtrl($scope, $resource, $http) {
+function UsersCtrl($scope, $resource, $http, AuthService) {
   var User = $resource('/users/:id', {id:'@id'}, { update: {method:'PUT'} });
+  $scope.$watch( AuthService.isLoggedIn, function ( isLoggedIn ) {
+    $scope.current_user = AuthService.current_user();
+  });
   $scope.returnedUser = "";
   $scope.users = User.query();
   $scope.name = '';

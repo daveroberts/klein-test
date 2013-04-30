@@ -1,10 +1,11 @@
 <?php
 
 class UsersController{
-  static function before($params, &$request, &$response){
-    //$response->code(401);
-    print_r($response); exit();
-    return false;
+  function before($params, &$request, &$response){
+    return true;
+  }
+  function before_create($params, &$request, &$response){
+    return (isset($_SESSION['current_user_id']));
   }
   function create($params, &$request, &$response){
     $user = User::Create($params);
@@ -19,10 +20,6 @@ class UsersController{
     $response->code(200);
     $response->json(User::All());
   }
-  function before_show($id, $params){
-    $response->code(401);
-    return false;
-  }
   function show($id, $params, &$request, &$response){
     $user = User::Get($id);
     if (!$user) { $response->code(400); }
@@ -30,6 +27,9 @@ class UsersController{
       $response->code(200);
       $response->json($user);
     }
+  }
+  function before_update($id, $params, &$request, &$response){
+    return (isset($_SESSION['current_user_id']));
   }
   function update($id, $params, &$request, &$response){
     $user = User::Get($id);
@@ -41,6 +41,9 @@ class UsersController{
       $response->code(400);
       $response->json($user->errors());
     }
+  }
+  function before_destroy($id, $params, &$request, &$response){
+    return (isset($_SESSION['current_user_id']));
   }
   function destroy($id, $params, &$request, &$response){
     $user = User::Get($id);

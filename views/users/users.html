@@ -9,7 +9,8 @@
     </tr>
   </tbody>
 </table>
-<div ng-hide="userToEdit">
+<div>Current User: {{current_user}}</div>
+<div ng-hide="userToEdit || !current_user">
   <h3>New User</h3>
   <form ng-submit="createUser()">
     <div>Name <input type="text" ng-model="name" /></div>
@@ -18,7 +19,7 @@
     <div style="color: red;">{{nameError}}</div>
   </form>
 </div>
-<div ng-show="userToEdit">
+<div ng-show="userToEdit && current_user">
   <h3>Edit User</h3>
   <form name="editUserForm" ng-submit="updateUser(userToEdit)">
     <div>ID: {{userToEdit.id}}</div>
@@ -29,4 +30,9 @@
       <a class="btn btn-danger" ng-click="deleteUser(userToEdit)"><i class="icon-trash"></i> Delete</a>
     </div>
   </form>
+</div>
+<div ng-show="userToEdit && !current_user">
+  <h3>Show User</h3>
+  <div>ID: {{userToEdit.id}}</div>
+  <div>Name <input type="text" ng-model="userToEdit.name" /></div>
 </div>

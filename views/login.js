@@ -1,10 +1,21 @@
-function LoginCtrl($scope, $resource, $http) {
-  $http.get('/current_user').success(function(data){ $scope.current_user = data; });
+usersApp.factory( 'AuthService', function() {
+  var current_user;
+
+  return {
+    login: function(user) { current_user = user; },
+    logout: function() { current_user = null; },
+    isLoggedIn: function() { return current_user != null; },
+    current_user: function() { return current_user; }
+  };
+});
+
+function LoginCtrl($scope, $resource, $http, AuthService) {
+  $http.get('/current_user').success(function(data){ AuthService.login(data); });
   $scope.login = function(){
     data = {username:$scope.username,password:$scope.password};
     $http({method: 'POST', url: '/login', data: data}).
       success(function(data, status, headers, config) {
-        $scope.current_user = $scope.username;
+        AuthService.login($scope.username);
         $.gritter.add({
           title: 'Success', text: 'Logged in as ' + $scope.username,
           image: '/assets/gritter/images/success.png',
@@ -24,7 +35,7 @@ function LoginCtrl($scope, $resource, $http) {
   $scope.logout = function(){
     $http({method: 'POST', url: '/logout'}).
       success(function(data, status, headers, config) {
-        $scope.current_user = null;
+        AuthService.logout();
       });
   }
 }
