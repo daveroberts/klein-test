@@ -1,14 +1,3 @@
-usersApp.factory( 'AuthService', function() {
-  var current_user;
-
-  return {
-    login: function(user) { current_user = user; },
-    logout: function() { current_user = null; },
-    isLoggedIn: function() { return current_user != null; },
-    current_user: function() { return current_user; }
-  };
-});
-
 function LoginCtrl($scope, $resource, $http, AuthService) {
   $http.get('/current_user').success(function(data){ AuthService.login(data); });
   $scope.login = function(){
